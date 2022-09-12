@@ -136,16 +136,17 @@ function getData(url) {
 function newsFeed() {
   var newsFeed = getData(NEWS_URL);
   var newsList = [];
-  newsList.push('<ul>');
+  var template = "\n        <div>\n            <h1>Hacker News</h1>\n            <ul>\n                {{__news_feed__}}\n            </ul>\n            <ul>\n                <li>\n                    <a href=\"#/page/{{__prev_page__}}\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n                </li>\n                <li>\n                    <a href=\"#/page/{{__next_page__}}\">\uB514\uC74C \uD398\uC774\uC9C0</a>\n                </li>\n            </ul>\n        </div>\n    ";
 
   for (var i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) {
     console.log(newsFeed.length);
     newsList.push("\n            <li>\n                <a href=\"#/show/".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n            </li>\n        "));
   }
 
-  newsList.push('</ul>');
-  newsList.push("\n        <ul>\n            <li><a href=\"#/page/".concat(store.currentPage > 1 ? store.currentPage - 1 : 1, "\">\uC774\uC804\uD398\uC774\uC9C0</li>\n            <li><a href=\"#/page/").concat(store.currentPage < newsFeed.length / 10 ? store.currentPage + 1 : store.currentPage, "\">\uB2E4\uC74C\uD398\uC774\uC9C0</li>\n        </ul>\n    "));
-  root.innerHTML = newsList.join('');
+  template = template.replace('{{__news_feed__}}', newsList.join(''));
+  template = template.replace('{{__prev_page__}}', store.currentPage > 1 ? store.currentPage - 1 : 1);
+  template = template.replace('{{__next_page__}}', store.currentPage < newsFeed.length / 10 ? store.currentPage + 1 : store.currentPage);
+  root.innerHTML = template;
 }
 
 function newsDetail() {
