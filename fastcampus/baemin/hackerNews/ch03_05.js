@@ -1,3 +1,9 @@
+// 라우터? 화면처리기 만들기
+//학습목표 
+// 1. 중복되는 코드 함수를 활용해 코드 개선
+// 2. DOM API를 활용해 발생하는 UI의 구조적인 문제를 문자열을 이용해 해결
+// 3. 라우터를 이용해 두개의 웹 페이지 구현
+
 const ajax = new XMLHttpRequest();  
 const content = document.createElement('div')
 const root = document.getElementById('root')
@@ -11,10 +17,26 @@ function getData (url){
     return JSON.parse(ajax.response);
 }
 
-const newsFeed = getData(NEWS_URL);
-const ul = document.createElement('ul')
+// 코드 재활용을 위해 함수로 리팩토링한다.
+// 라우터에서 글 목록화면을 호출
+function newsFeed(){
+    const newsFeed = getData(NEWS_URL);
+    const newsList = [];
+    newsList.push('<ul>')
+    for(let i=0; i<10; i++){
+        console.log(newsFeed.length)
+        newsList.push(`
+            <li>
+                <a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a>
+            </li>
+        `)
+    }
+    newsList.push('</ul>')
+    root.innerHTML = newsList.join('')
+}
 
-window.addEventListener('hashchange', function(){
+//라우터에서 글 내용화면 호출을 위해서, 함수 이름이 필요. 
+function newsDetail(){
     
     const id = location.hash.substr(1)
     const newsContent = getData(CONTENT_URL.replace('@id', id));
@@ -23,37 +45,19 @@ window.addEventListener('hashchange', function(){
         <span><a href="#">목록으로</a></span>
         <h1>${newsContent.title}</h1>
     `
-})
-
-// for(let i=0; i<10; i++){
-//     const div = document.createElement('div')
-//     div.innerHTML = `
-//         <ul>
-//             <li><a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a></li>
-//         </ul>
-//     `
-
-//     ul.appendChild(div.firstElementChild)
-
-// }
-
-// root.appendChild(ul)
-// root.appendChild(content)
-
-// 위의 코드는 appendChild를 사용하고있다. 이는 즉 DOM API를 사용해 태그를 컨트롤하므로 하위 코드처럼 제거작업이 필요
-// 제거작업을 위해서는 위의 코드가 하나의 문자열이 될 수 있는지 확인이 필요한데, for문으로 li를 하나하나씩 만들어주므로 하나의 
-// 문자열이 될 수 없고 이를 대체하기 위해서 빈배열과 push를 활용해 코드를 재정비 한다.
-
-const newsList = [];
-newsList.push('<ul>')
-for(let i=0; i<10; i++){
-    console.log(newsFeed.length)
-    newsList.push(`
-        <li>
-            <a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a>
-        </li>
-    `)
 }
-newsList.push('</ul>')
-//newsList 배열이므로 문자열로 넣을 수 없기때문에 join('')을 이용해 문자열로 만들어준다.
-root.innerHTML = newsList.join('') //join은 각 배열의 요소 즉 태크의 default 구분자로 comma를 가지게 되며, 해당 구분자는 join()안에 명시해 변경 가능하다.
+
+//newsFeed를 처음에 호출하는 라우터 함수가 필요함 
+function router(){
+    const routePath = location.hash
+    //location.hash 에 #만 있을 경우, 빈 값을 반환
+    if(routePath === ''){
+        newsFeed()
+    }else{
+        newsDetail()
+    }
+}
+window.addEventListener('hashchange', router)
+
+// window onload시, router호출
+router()

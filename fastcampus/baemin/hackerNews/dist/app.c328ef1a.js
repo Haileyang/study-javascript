@@ -128,40 +128,45 @@ function getData(url) {
   ajax.open('GET', url, false);
   ajax.send();
   return JSON.parse(ajax.response);
-}
+} // 코드 재활용을 위해 함수로 리팩토링한다.
+// 라우터에서 글 목록화면을 호출
 
-var newsFeed = getData(NEWS_URL);
-var ul = document.createElement('ul');
-window.addEventListener('hashchange', function () {
+
+function newsFeed() {
+  var newsFeed = getData(NEWS_URL);
+  var newsList = [];
+  newsList.push('<ul>');
+
+  for (var i = 0; i < 10; i++) {
+    console.log(newsFeed.length);
+    newsList.push("\n            <li>\n                <a href=\"#".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n            </li>\n        "));
+  }
+
+  newsList.push('</ul>');
+  root.innerHTML = newsList.join('');
+} //라우터에서 글 내용화면 호출을 위해서, 함수 이름이 필요. 
+
+
+function newsDetail() {
   var id = location.hash.substr(1);
   var newsContent = getData(CONTENT_URL.replace('@id', id));
   root.innerHTML = "\n        <span><a href=\"#\">\uBAA9\uB85D\uC73C\uB85C</a></span>\n        <h1>".concat(newsContent.title, "</h1>\n    ");
-}); // for(let i=0; i<10; i++){
-//     const div = document.createElement('div')
-//     div.innerHTML = `
-//         <ul>
-//             <li><a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a></li>
-//         </ul>
-//     `
-//     ul.appendChild(div.firstElementChild)
-// }
-// root.appendChild(ul)
-// root.appendChild(content)
-// 위의 코드는 appendChild를 사용하고있다. 이는 즉 DOM API를 사용해 태그를 컨트롤하므로 하위 코드처럼 제거작업이 필요
-// 제거작업을 위해서는 위의 코드가 하나의 문자열이 될 수 있는지 확인이 필요한데, for문으로 li를 하나하나씩 만들어주므로 하나의 
-// 문자열이 될 수 없고 이를 대체하기 위해서 빈배열과 push를 활용해 코드를 재정비 한다.
+} //newsFeed를 처음에 호출하는 라우터 함수가 필요함 
 
-var newsList = [];
-newsList.push('<ul>');
 
-for (var i = 0; i < 10; i++) {
-  console.log(newsFeed.length);
-  newsList.push("\n        <li>\n            <a href=\"#".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n        </li>\n    "));
+function router() {
+  var routePath = location.hash; //location.hash 에 #만 있을 경우, 빈 값을 반환
+
+  if (routePath === '') {
+    newsFeed();
+  } else {
+    newsDetail();
+  }
 }
 
-newsList.push('</ul>'); //newsList 배열이므로 문자열로 넣을 수 없기때문에 join('')을 이용해 문자열로 만들어준다.
+window.addEventListener('hashchange', router); // window onload시, router호출
 
-root.innerHTML = newsList.join(''); //join은 각 배열의 요소 즉 태크의 default 구분자로 comma를 가지게 되며, 해당 구분자는 join()안에 명시해 변경 가능하다.
+router();
 },{}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
