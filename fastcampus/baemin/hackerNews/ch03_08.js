@@ -1,3 +1,9 @@
+//댓글 목록이 표시되는 아름다운 UI 만들기
+
+//학습목표 
+// 1. UI 스타일 변경
+// 2. 댓글목록 표시
+
 const ajax = new XMLHttpRequest();  
 const content = document.createElement('div')
 const root = document.getElementById('root')
