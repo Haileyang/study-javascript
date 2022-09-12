@@ -19,14 +19,18 @@ function newsFeed(){
     const newsFeed = getData(NEWS_URL);
     const newsList = [];
     let template = `
-        <div>
-            <h1>Hacker News</h1>
+        <div class="container mx-auto p-20 max-w-5xl">
+            <h1 class="text-3xl text-center font-bold mb-20">Hacker News</h1>
             <ul>
                 {{__news_feed__}}
             </ul>
-            <ul>
+            <ul class="flex justify-between mt-20">
                 <li>
                     <a href="#/page/{{__prev_page__}}">이전 페이지</a>
+                </li>
+                <li>
+                    <span class="font-bold">{{__current_page__}}</span> /
+                    <span>{{__total_page__}}</span>
                 </li>
                 <li>
                     <a href="#/page/{{__next_page__}}">디음 페이지</a>
@@ -35,10 +39,12 @@ function newsFeed(){
         </div>
     `
     for(let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++){
-        console.log(newsFeed.length)
         newsList.push(`
-            <li>
-                <a href="#/show/${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a>
+            <li class="mb-5">
+                <span class="font-bold mr-5">${i + 1}</span>
+                <a href="#/show/${newsFeed[i].id}">${newsFeed[i].title} 
+                    <span class="text-gray-400">(${newsFeed[i].comments_count})</span>
+                </a>
             </li>
         `)
     }
@@ -46,6 +52,8 @@ function newsFeed(){
     template = template.replace('{{__news_feed__}}', newsList.join(''))
     template = template.replace('{{__prev_page__}}', store.currentPage > 1 ? store.currentPage - 1 : 1)
     template = template.replace('{{__next_page__}}', store.currentPage < (newsFeed.length / 10) ? store.currentPage + 1 : store.currentPage)
+    template = template.replace('{{__current_page__}}', store.currentPage)
+    template = template.replace('{{__total_page__}}', (newsFeed.length / 10))
     root.innerHTML = template
 }
 

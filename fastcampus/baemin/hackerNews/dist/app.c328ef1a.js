@@ -136,16 +136,17 @@ function getData(url) {
 function newsFeed() {
   var newsFeed = getData(NEWS_URL);
   var newsList = [];
-  var template = "\n        <div>\n            <h1>Hacker News</h1>\n            <ul>\n                {{__news_feed__}}\n            </ul>\n            <ul>\n                <li>\n                    <a href=\"#/page/{{__prev_page__}}\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n                </li>\n                <li>\n                    <a href=\"#/page/{{__next_page__}}\">\uB514\uC74C \uD398\uC774\uC9C0</a>\n                </li>\n            </ul>\n        </div>\n    ";
+  var template = "\n        <div class=\"container mx-auto p-20 max-w-5xl\">\n            <h1 class=\"text-3xl text-center font-bold mb-20\">Hacker News</h1>\n            <ul>\n                {{__news_feed__}}\n            </ul>\n            <ul class=\"flex justify-between mt-20\">\n                <li>\n                    <a href=\"#/page/{{__prev_page__}}\">\uC774\uC804 \uD398\uC774\uC9C0</a>\n                </li>\n                <li>\n                    <span class=\"font-bold\">{{__current_page__}}</span> /\n                    <span>{{__total_page__}}</span>\n                </li>\n                <li>\n                    <a href=\"#/page/{{__next_page__}}\">\uB514\uC74C \uD398\uC774\uC9C0</a>\n                </li>\n            </ul>\n        </div>\n    ";
 
   for (var i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) {
-    console.log(newsFeed.length);
-    newsList.push("\n            <li>\n                <a href=\"#/show/".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n            </li>\n        "));
+    newsList.push("\n            <li class=\"mb-5\">\n                <span class=\"font-bold mr-5\">".concat(i + 1, "</span>\n                <a href=\"#/show/").concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, " \n                    <span class=\"text-gray-400\">(").concat(newsFeed[i].comments_count, ")</span>\n                </a>\n            </li>\n        "));
   }
 
   template = template.replace('{{__news_feed__}}', newsList.join(''));
   template = template.replace('{{__prev_page__}}', store.currentPage > 1 ? store.currentPage - 1 : 1);
   template = template.replace('{{__next_page__}}', store.currentPage < newsFeed.length / 10 ? store.currentPage + 1 : store.currentPage);
+  template = template.replace('{{__current_page__}}', store.currentPage);
+  template = template.replace('{{__total_page__}}', newsFeed.length / 10);
   root.innerHTML = template;
 }
 
