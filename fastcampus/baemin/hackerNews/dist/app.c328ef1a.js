@@ -123,49 +123,51 @@ var content = document.createElement('div');
 var root = document.getElementById('root');
 var NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json';
 var CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json';
+var store = {
+  currentPage: 1
+};
 
 function getData(url) {
   ajax.open('GET', url, false);
   ajax.send();
   return JSON.parse(ajax.response);
-} // 코드 재활용을 위해 함수로 리팩토링한다.
-// 라우터에서 글 목록화면을 호출
-
+}
 
 function newsFeed() {
   var newsFeed = getData(NEWS_URL);
   var newsList = [];
   newsList.push('<ul>');
 
-  for (var i = 0; i < 10; i++) {
+  for (var i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++) {
     console.log(newsFeed.length);
-    newsList.push("\n            <li>\n                <a href=\"#".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n            </li>\n        "));
+    newsList.push("\n            <li>\n                <a href=\"#/show/".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n            </li>\n        "));
   }
 
   newsList.push('</ul>');
+  newsList.push("\n        <ul>\n            <li><a href=\"#/page/".concat(store.currentPage > 1 ? store.currentPage - 1 : 1, "\">\uC774\uC804\uD398\uC774\uC9C0</li>\n            <li><a href=\"#/page/").concat(store.currentPage < newsFeed.length / 10 ? store.currentPage + 1 : store.currentPage, "\">\uB2E4\uC74C\uD398\uC774\uC9C0</li>\n        </ul>\n    "));
   root.innerHTML = newsList.join('');
-} //라우터에서 글 내용화면 호출을 위해서, 함수 이름이 필요. 
-
+}
 
 function newsDetail() {
-  var id = location.hash.substr(1);
+  var id = location.hash.substr(7);
   var newsContent = getData(CONTENT_URL.replace('@id', id));
-  root.innerHTML = "\n        <span><a href=\"#\">\uBAA9\uB85D\uC73C\uB85C</a></span>\n        <h1>".concat(newsContent.title, "</h1>\n    ");
-} //newsFeed를 처음에 호출하는 라우터 함수가 필요함 
-
+  root.innerHTML = "\n        <span><a href=\"#/page/".concat(store.currentPage, "\">\uBAA9\uB85D\uC73C\uB85C</a></span>\n        <h1>").concat(newsContent.title, "</h1>\n    ");
+}
 
 function router() {
-  var routePath = location.hash; //location.hash 에 #만 있을 경우, 빈 값을 반환
+  var routePath = location.hash;
 
   if (routePath === '') {
+    newsFeed();
+  } else if (routePath.indexOf('#/page/') >= 0) {
+    store.currentPage = Number(routePath.substr(7));
     newsFeed();
   } else {
     newsDetail();
   }
 }
 
-window.addEventListener('hashchange', router); // window onload시, router호출
-
+window.addEventListener('hashchange', router);
 router();
 },{}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
