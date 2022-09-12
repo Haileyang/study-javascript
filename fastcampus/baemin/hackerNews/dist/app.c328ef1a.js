@@ -119,19 +119,49 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"app.js":[function(require,module,exports) {
 var ajax = new XMLHttpRequest();
+var content = document.createElement('div');
+var root = document.getElementById('root');
 var NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json';
-ajax.open('GET', NEWS_URL, false);
-ajax.send();
-var newsFeed = JSON.parse(ajax.response);
-var ul = document.createElement('ul');
+var CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json';
 
-for (var i = 0; i < 10; i++) {
-  var li = document.createElement('li');
-  li.innerHTML = newsFeed[i].title;
-  ul.appendChild(li);
+function getData(url) {
+  ajax.open('GET', url, false);
+  ajax.send();
+  return JSON.parse(ajax.response);
 }
 
-document.getElementById('root').appendChild(ul);
+var newsFeed = getData(NEWS_URL);
+var ul = document.createElement('ul');
+window.addEventListener('hashchange', function () {
+  var id = location.hash.substr(1);
+  var newsContent = getData(CONTENT_URL.replace('@id', id));
+  root.innerHTML = "\n        <span><a href=\"#\">\uBAA9\uB85D\uC73C\uB85C</a></span>\n        <h1>".concat(newsContent.title, "</h1>\n    ");
+}); // for(let i=0; i<10; i++){
+//     const div = document.createElement('div')
+//     div.innerHTML = `
+//         <ul>
+//             <li><a href="#${newsFeed[i].id}">${newsFeed[i].title}(${newsFeed[i].comments_count})</a></li>
+//         </ul>
+//     `
+//     ul.appendChild(div.firstElementChild)
+// }
+// root.appendChild(ul)
+// root.appendChild(content)
+// 위의 코드는 appendChild를 사용하고있다. 이는 즉 DOM API를 사용해 태그를 컨트롤하므로 하위 코드처럼 제거작업이 필요
+// 제거작업을 위해서는 위의 코드가 하나의 문자열이 될 수 있는지 확인이 필요한데, for문으로 li를 하나하나씩 만들어주므로 하나의 
+// 문자열이 될 수 없고 이를 대체하기 위해서 빈배열과 push를 활용해 코드를 재정비 한다.
+
+var newsList = [];
+newsList.push('<ul>');
+
+for (var i = 0; i < 10; i++) {
+  console.log(newsFeed.length);
+  newsList.push("\n        <li>\n            <a href=\"#".concat(newsFeed[i].id, "\">").concat(newsFeed[i].title, "(").concat(newsFeed[i].comments_count, ")</a>\n        </li>\n    "));
+}
+
+newsList.push('</ul>'); //newsList 배열이므로 문자열로 넣을 수 없기때문에 join('')을 이용해 문자열로 만들어준다.
+
+root.innerHTML = newsList.join(''); //join은 각 배열의 요소 즉 태크의 default 구분자로 comma를 가지게 되며, 해당 구분자는 join()안에 명시해 변경 가능하다.
 },{}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -160,7 +190,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61541" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55530" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
