@@ -1,3 +1,9 @@
+//문자열을 활용한 HTML 다루기
+
+//학습목표 
+// 1. 중복되는 코드 함수를 활용해 코드 개선
+// 2. DOM API를 활용해 발생하는 UI의 구조적인 문제를 문자열을 이용해 해결
+
 const ajax = new XMLHttpRequest();  
 const content = document.createElement('div')
 const root = document.getElementById('root')
@@ -5,7 +11,7 @@ const NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json'
 const CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json'
 
 // 코드 리팩토링
-// 데이터의 중복은 변수로 정리 가능 / 변수가 여러개일 때는 객체를 활용 / 코트가 중복될 때는 함수를 활용 
+// 데이터의 중복은 변수로 정리 가능 / 변수가 여러개일 때는 객체를 활용 / 코드가 중복될 때는 함수를 활용 
 // 함수를 활용해서 중복되는 ajax 호출을 정리 
 function getData (url){
     ajax.open('GET', url, false)
