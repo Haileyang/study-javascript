@@ -110,17 +110,43 @@ function newsDetail(){
             <div class="h-full border rounded-xl bg-white m-6 p-4 ">
                 <h2>${newsContent.title}</h2>
                 <div class="text-gray-400 h-20">
-                ${newsContent.content}
+                    ${newsContent.content}
                 </div>
-
+                <h2>COMMENTS</h2>
+                <hr>
                 {{__comments__}}
 
             </div>
         </div>
     `
+    // comments를 작업하기에 앞서서, 몇개의 커멘트와 대댓글이 있는지 확인이 이렵다.
+    // 하지만, 알 수 있는 것은 각각의 커멘트를 처리하는 코드와 로직은 같으므로, 함수를 이용해서 커멘트 처리를 할 수 있다는 것.
+    function makeComment(comments, called = 0){ // 외부로부터 받아야되는 파라미터 comments 지정, 호출된 횟수 파라미터로 지정
+        const commentString = [] // 각 커멘트를 담는 빈 배열
 
-    root.innerHTML = template
-    
+        for (let i = 0; i < comments.length; i++){
+            commentString.push(`
+                <div style="padding-left: ${called * 40}px" class="mt-4">
+                    <div class="text-gray-400">
+                        <i class="fa fa-sort-up mr-2"></i>
+                        <strong>${comments[i].user}</strong> ${comments[i].time_ago}
+                    </div>
+                    <p class="text-gray-700">${comments[i].content}</p>
+                </div>  
+            `)
+
+            //대댓글 호출 필요 - 재귀 호출
+            if(comments[i].comments.length > 0){
+                commentString.push(makeComment(comments[i].comments, called + 1))
+            }
+        }
+        
+        //빈 배열에 포문으로 채워진 각 요소를 배열에 묶어서 문자열로 반환
+        return commentString.join('')
+    }
+
+    root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  
+    // root.innerHTML = template //여기에는 왜 template를 호출하지 않아도 되는걸까요?
 }
 
 function router(){
