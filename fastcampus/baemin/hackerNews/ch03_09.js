@@ -1,3 +1,10 @@
+// 상태를 가져보자, 읽은 글 표시하기
+
+//학습목표 
+// 1. 읽은 상태 확인 후, 읽은 글 UI 표시
+// 2. 첫번째 페이지가 아닌 페이지에서 게시글 클릭 후, 목록으로 돌아갈 때, 현코드의 문제점 : 전체 데이터 다시 호출 개선 
+// --> 개선 방법 : 읽은 데이터의 페이지 기억 후, 해당 페이지의 게시글만 호출
+
 const ajax = new XMLHttpRequest();  
 const content = document.createElement('div')
 const root = document.getElementById('root')
@@ -6,7 +13,7 @@ const CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json'
 
 let store = {
     currentPage : 1,
-    feeds : [] 
+    feeds : [] // read를 매번 호출하지 않으려면, 빈 배열에 데이터 정보를 보관하면 된다. 
 }
 
 function getData (url){
@@ -16,16 +23,17 @@ function getData (url){
     return JSON.parse(ajax.response);
 }
 
-
+//읽은 데이터의 여부는 데이터 호출 이외에 다양한 일을 처리하는 getData에 넣기보다는 따로 빼서 함수 작성
 function makeFeeds(feeds){
     for (let i = 0; i < feeds.length; i++){
-        feeds[i].read = false 
+        feeds[i].read = false // 처음에 안읽을 피드에 false값 부여
     }
     return feeds
-} 
+} // 이 함수는 어디서 호춣해서 작동하는 걸까요?
 
 function newsFeed(){
-    let newsFeed = store.feeds 
+    // const newsFeed = getData(NEWS_URL); // 현재는 getData를 통해서 지속적으로 데이터를 전체 불러오므로 store.feeds로 저장된 데이터 호출
+    let newsFeed = store.feeds // 기존에는 변하지 않는 상수의 데이터였다면, 변수가 되므로 let 사용
     const newsList = [];
     let template = `
         <div class="bg-gray-600 min-h-screen">
@@ -60,10 +68,12 @@ function newsFeed(){
         </div>
     `
 
-    //최초에 newsFeed
+    //최초에 newsFeed를 불러와야함 
     if(newsFeed.length === 0){
         newsFeed = store.feeds = getData(NEWS_URL)
     }
+
+
 
     for(let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++){
         newsList.push(`
