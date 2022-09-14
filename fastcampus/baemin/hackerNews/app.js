@@ -67,19 +67,19 @@ function newsFeed(){
 
     for(let i = (store.currentPage - 1) * 10; i < store.currentPage * 10; i++){
         newsList.push(`
-            <div class="p-6 ${newsFeed[i].read ? 'bg-gray-100' : 'bg-white'} mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
+            <div class="p-6 ${newsFeed[i].read ? 'bg-gray-300' : 'bg-white'} mt-6 rounded-lg shadow-md transition-colors duration-500 hover:bg-green-100">
                 <ul class="flex">
                     <li class="flex-auto">
                         <a href="#/show/${newsFeed[i].id}">${newsFeed[i].title}</a>  
                     </li>
-                    <li class="text-center text-sm">
+                    <li class="text-center text-sm ml-10">
                         <div class="w-10 text-white bg-green-600 rounded-lg px-0 py-2">${newsFeed[i].comments_count}</div>
                     </li>
                 </ul>
                 <div class="flex mt-3">
-                    <ul class="grid grid-cols-3 text-sm text-gray-500">
+                    <ul class="text-sm text-gray-500 flex">
                         <li><i class="fas fa-user mr-1"></i>${newsFeed[i].user}</li>
-                        <li><i class="fas fa-heart mr-1"></i>${newsFeed[i].points}</li>
+                        <li class="mx-5"><i class="fas fa-heart mr-1"></i>${newsFeed[i].points}</li>
                         <li><i class="far fa-clock mr-1"></i>${newsFeed[i].time_ago}</li>
                     </ul>  
                 </div>
