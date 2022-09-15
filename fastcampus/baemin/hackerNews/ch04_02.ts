@@ -47,6 +47,15 @@ function makeFeeds(feeds){
     return feeds
 } 
 
+// 함수로 만들어서 root : HTMLElement | null 에러 방지 
+function updateView(html){
+    if(root){
+        root.innerHTML = html;
+    }else{
+        console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
+    }
+}
+
 function newsFeed(){
     let newsFeed : NewsFeed[] = store.feeds 
     const newsList = [];
@@ -121,12 +130,8 @@ function newsFeed(){
     // 코드상으로 null이 들어가있지 않은 경우에만, html element 에 접근하게 하는 코드 추가 작성필요
    
     // root.innerHTML = template
-
-    if(root != null){
-        root.innerHTML = template;
-    }else{
-        console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
-    }
+    updateView(template)
+    
 }
 
 function newsDetail(){
@@ -197,11 +202,7 @@ function newsDetail(){
 
     // root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  
 
-    if(root){
-        root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  ;
-    }else{
-        console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
-    }
+    updateView(template.replace('{{__comments__}}', makeComment(newsContent.comments)))
 }
 
 function router(){
