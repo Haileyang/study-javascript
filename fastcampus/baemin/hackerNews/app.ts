@@ -1,10 +1,27 @@
-const ajax = new XMLHttpRequest();  
-const content = document.createElement('div')
-const root = document.getElementById('root')
+const ajax : XMLHttpRequest = new XMLHttpRequest();
+const content : HTMLDivElement | undefined = document.createElement('div')
+const root : HTMLElement | null = document.getElementById('root')
 const NEWS_URL = 'https://api.hnpwa.com/v0/news/1.json'
 const CONTENT_URL = 'https://api.hnpwa.com/v0/item/@id.json'
 
-let store = {
+//type naming convention = capitalize
+type Store = {
+    currentPage : number;
+    feeds : NewsFeed[] //the array contains the types assigned on NewsFeed Type
+}
+
+type NewsFeed = {
+    id : number;
+    comments_count : number;
+    url : string, 
+    user : string, 
+    time_ago : string;
+    points: number,
+    title : string; 
+    read? : boolean; //? optional
+}
+
+const store : Store = {
     currentPage : 1,
     feeds : [] 
 }
@@ -25,7 +42,7 @@ function makeFeeds(feeds){
 } 
 
 function newsFeed(){
-    let newsFeed = store.feeds 
+    let newsFeed : NewsFeed[] = store.feeds 
     const newsList = [];
     let template = `
         <div class="bg-gray-600 min-h-screen">
@@ -92,7 +109,18 @@ function newsFeed(){
     template = template.replace('{{__next_page__}}', store.currentPage < (newsFeed.length / 10) ? store.currentPage + 1 : store.currentPage)
     template = template.replace('{{__current_page__}}', store.currentPage)
     template = template.replace('{{__total_page__}}', (newsFeed.length / 10))
-    root.innerHTML = template
+
+    //하기 코드의 경우, null 값이 들어갈 수 있다고 명시한 에러가 발생한다. HTMLElement | null
+    // null 이 들어가면 innerHTML이 들어갈 경우, 오류가 발생하므로 null
+    // 코드상으로 null이 들어가있지 않은 경우에만, html element 에 접근하게 하는 코드 추가 작성필요
+   
+    // root.innerHTML = template
+
+    if(root != null){
+        root.innerHTML = template;
+    }else{
+        console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
+    }
 }
 
 function newsDetail(){
@@ -140,6 +168,7 @@ function newsDetail(){
     function makeComment(comments, called = 0){ 
         const commentString = [] 
 
+        // i의 타입은 명시한적이 없지만 에러로 뜨지 않는 이유는 타입스크립트가 추론을 해서 숫자형으로 인지해서 임의로 타입을 지정해줌
         for (let i = 0; i < comments.length; i++){
             commentString.push(`
                 <div style="padding-left: ${called * 40}px" class="mt-4">
@@ -160,7 +189,13 @@ function newsDetail(){
         return commentString.join('')
     }
 
-    root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  
+    // root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  
+
+    if(root){
+        root.innerHTML = template.replace('{{__comments__}}', makeComment(newsContent.comments))  ;
+    }else{
+        console.error('최상위 컨테이너가 없어 UI를 진행하지 못합니다.')
+    }
 }
 
 function router(){
