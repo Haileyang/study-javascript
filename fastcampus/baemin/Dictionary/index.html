@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>참조사전</title>
+</head>
+<body>
+    <div id="identifier">
+        <h1>Identifier 식별자</h1>
+        <p>An identifier is a sequence of characters in the code that identifies a variable, function, or property.</p>
+        <p>In JavaScript, identifiers are case-sensitive and can contain Unicode letters, $, _, and digits (0-9), but may not start with a digit.</p>
+        <p>An identifier differs from a string in that a string is data, while an identifier is part of the code. In JavaScript, there is no way to convert identifiers to strings, but sometimes it is possible to parse strings into identifiers.</p>
+        <div class="ex">
+            <strong>Example of when it is possible to parse strings into identifiers.</strong>
+            <script>
+                let age = 10 
+                const AGE = 10 // there is implicit rule for const variable naming convention - upper case
+                //function or object name - camel or sneak case
+                const person = {
+                    age: 10,
+                    ['myName'] : 'Kim',
+                    ['12 myName'] : 'Kim',
+
+                }
+                person.myName //in here myName is parsed strings that act as identifier
+                person['12 myName'] //when the case that the parsed string identifier start with digits or contains spaces, we need to call the string form itself as a identifier
+
+                //Question here : why person.myName includes a dot while person['12 myName'] does not 
+
+            </script>
+        </div>
+    </div>
+    <div id="dataType">
+        <h1>JavaScript data types and data structures 자료형</h1>
+        <strong>Dynamic typing</strong>
+        <p>javascript is a loosely typed and dynamic language</p>
+        <script>
+            let foo = 42; // foo is a number 
+            foo = 'bar' // foo is a string 
+            foo = ture // foo is a boolean
+        </script>
+        <strong>Javascript types</strong>
+        <ul>
+            <li>primitive values : immutable datum represented directly at the lowest level of the language
+                <ol>
+                    <li>Boolean type</li>
+                    <li>null type</li>
+                    <li>undefined type</li>
+                    <li>number type</li>
+                    <li>bigIng type</li>
+                    <li>string type</li>
+                    <li>symbol type</li>
+                </ol>
+            </li>
+            <li>objects : collections of property
+                <strong>data property</strong>
+                <p>data properties associate a key with a value. it can be described ny the following attributes </p>
+                <ul>
+                    <li>value : the value retrieved by a get access of the property</li>
+                    <li>writable : a boolean value indicating if the property can be changed with an assignment</li>
+                    <li>enumerable : A boolean value indicating if the property can be enumerated by a for...in</li>
+                    <li>configurable : A boolean value indicating if the property can be deleted, can be changed to an accessor property, and can have its attributes changed.</li>
+                </ul>
+                <strong>Accessor property</strong>
+                <p>Associates a key with one of two accessor functions (get and set) to retrieve or store a value.</p>
+                <ul>
+                    <li>get : a function called with an empty argument list to retrieve the property value whenever a get access to the value is performed</li>
+                    <li>set : A function called with an argument that contains the assigned value. Executed whenever a specified property is attempted to be changed.</li>
+                    <li>enumerable</li>
+                    <li>configurable</li>
+                </ul>
+            </li>
+        </ul>
+        <hr>
+        <div class="typescript">
+            <h2>Typescript additional data types</h2>
+            <strong>Tuple 튜플</strong>
+            <p>tuple can contain two values of different data types</p>
+            <div class="ex">
+                <script>
+                    const empId: number = 1;
+                    const empName : string = "Steve";
+
+                    //tuple type variable
+                    let employee: [number, string] = [1, "Steve"];
+                </script>
+            </div>
+            <strong>Enum 열거</strong>
+            <p>Enums or enumerations are a new data type that allow us to declare a set of named constants (a collection of reelated values that can be numeric or string values)</p>
+            <small>* Enum is a code while object in javascript is data/ if getting data from server to visible shows the output, enum give less flexibility</small>
+            <strong>three types of enums</strong>
+            <ol>
+                <li>Numeric Enum - number based enums, they store string values as numbers
+                    <div class="ex">
+                        <script>
+                            enum PrintMedia { 
+                                Newspaper = 0,
+                                Newsletter = 1, 
+                                Magazine = 2, 
+                                Book = 3
+                            }
+                            //it is not necessary to assign sequential value to Enum members. They can be any value while the default set is first member as 0 and increment by 1 for other members
+                        </script>
+                    </div>
+                </li>
+                <li>string Enum
+                    <div class="ex">
+                        <script>
+                            enum PrintMedia {
+                                Newspaper = "NEWSPAPER",
+                                Newsletter = "NEWSLETTER",
+                                Magazine = "MANAZINE",
+                                Book = "BOOK",
+                            }
+
+                            //access string enum 
+                            PrintMedia.Newspaper // return NEWSPAPER
+                            PrintMedia.["Magazine"] // return Magazine
+                        </script>
+                    </div>
+                </li>
+                <li>Heterogeneous Enum : enums contain both string and numeric values
+                    <div class="ex">
+                        <script>
+                            enum Status {
+                                Active = "ACTIVE"
+                                Deactivate = 1,
+                                Pending
+                            }
+                            
+                            //reverse mapping : We can access the value of a member and also a member name from its value.
+                            enum PrintMedia {
+                                Newspaper = 1,
+                                Newsletter,
+                                Magazine,
+                                Book
+                            }
+
+                            PrintMedia.Magazine;   // returns  3
+                            PrintMedia["Magazine"];// returns  3
+                            PrintMedia[3];         // returns  Magazine
+
+                        </script>
+                    </div>
+                </li>
+            </ol>
+            <strong>Any 애니</strong>
+            <p>it means any data type that is not necessary to check the type on compile</p>
+            <strong>void 보이드</strong>
+            <p>void is used when there is no returning value to mark the returning data type</p>
+            <strong>Never 네버</strong>
+            <p>never type is a type that never return. it is used with function or error function to generate error or something that never returning back. </p>
+        </div>
+    </div>
+    <div id="type">
+        <h1>Same Code (Data type) but different result between JS and TS</h1>
+        <div class="ex">
+            <script>
+                //JS
+                function addAge(age){
+                    return age + 1;
+                }
+                let age = addAge(30) // if the input data type is string '30' the output would be 301
+                console.log(age) //31
+                //javascript is dynamic language that they define the data type when it is defined or changed 
+            
+
+                //TS 
+                function addAge(age : number) : number {
+                    return age + 1;
+                }
+                let age : number = addAge(30) // if the input data type is string '30' the output would be 301
+                console.log(age) //31
+            </script>
+        </div>
+    </div>
+    <div id="expression">
+        <h1>Expression and Operation </h1>
+        <p>식은 세미콜론으로 식하나 값하나 = 값은 모두 식 </p>
+        <p>문은 세미콜론으로 끝나도 문법적으로 오류는 아니지만 무의미</p>
+        <hr>
+        <strong>구조 분해 할당</strong>
+        <div class="ex">
+            <script>
+                const colors = ['red', 'yellow', 'black']
+
+                //하기 코드의 경우, color의 0번째를 위의 colors 배열에서 일일히 찾아봐야되는 어려움이 있다.
+                colors[0]
+
+                //위의 문제를 해결하기 위해서, 상수에 따로 값을 넣을 수 있지만, 이 역시 단점을 보안해야된다. 
+                const red = colors[0]
+                const yellow = colors[1]
+                const black = colors[2]
+
+                yellow
+
+                //위의 단점을 보안하기 위해서 사용할 수 있는 것은, 구조분해할당이다. 오른쪽에 있는 구조를 분해 및 왼쪽에 할당
+                const [red, yellow, black ] = colors
+
+                const [, yellow] = colors
+            </script>
+        </div>
+    </div>
+    <div id="reference">
+        <h1>참조와 복사</h1>
+        <div class="ex">
+            <script>
+                let a = 10;
+                let b = a; // b = 10 
+
+                b = 20 // b = 20
+
+                let o = {
+                    isLoading : false,
+                }
+                let o2 = 0  //isLoading : false
+                
+                o2.isLoading = true; // o : isLoading : true /  o2 : isLoading : true
+
+                //above let b = a code does not have relationship between two data while b has a copied value of a
+                //the primitive data type is copiable
+                //In any situation, the copied value does not influence the privious variable
+                //While primitive data type is copiable, object data type is referencing one another (only pointing the location, so change is influcing to both original and referenced objects)
+            </script>
+            <script>
+                //example 
+
+                let oo = {
+                    isLoading = false,
+                }
+
+                function foo(oo){ 
+                    oo.isLoading = true; // oo is parameter
+                }
+
+                foo(oo) //oo is variable above 
+                // oo.isLoading = true
+
+            </script>
+        </div>
+    </div>
+    <div id="conditionalStatement">
+        <h1>conditional statement 조건문</h1>
+        <strong>if statement</strong>
+        <p>in the bracket if the number is 0 return false , else return true
+            <br>if the string is empty return false else return true,
+            <br>if null or undefine return false, 
+            <br>if object, whether there is value or not, return true
+        </p>
+        <div class="ex">
+            <script>
+                //if statement
+                let dog = 10;
+
+                if(dog === 10){ 
+                    /* in the bracket if the number is 0 return false , else return true
+                    if the string is empty return false else return true,
+                    if null or undefine return false, 
+                    if object, whether there is value or not, return true
+
+                    */
+                    console.log('There are ten dogs')
+                }else{
+                    console.log('I do not know')
+                } // 'There are ten dogs'
+
+                // switch case 
+                let cat = 20; 
+                switch(cat){
+                    case 1 : 
+                        console.log(1);
+                        // break;  
+                    case 2 : 
+                        console.log(2);
+                        // break;  
+                    case 3 : 
+                        console.log(3);
+                        // break;  
+                    case 4 : 
+                        console.log(4);
+                        // break;  
+                    default :
+                        console.log('??');
+                        // break;  
+                        break;  
+                    } 
+                    // "??"
+                    // if let cat = 1; the outcome is still 1 2 3 ??. which means when the case is true swich statement return the value but it keeps return all the rest of value till meet break.
+            </script>
+        </div>
+    </div>
+    <div id="loop">
+        <h1>loop</h1>
+        <div class="ex">
+            <script>
+                const arr = ['a', 'b', 'c', 'd']
+                
+                //for loop 
+                for(let i = 0; i < arr.length; i++){
+                    console.log(arr[i])
+                }
+
+                //while : check the statement and compare them before i++
+                //while conditional statement could be not act at all
+                let i = 0;
+                while(i < arr.length){
+                    console.log(arr[i])
+                    i++
+                }
+
+                //do while : do i++ first then check the statement
+                // do while conditional statement must act at least one
+                i = 0;
+                do{
+                    console.log(arr[i])
+                    i++
+                }while(i < arr.length)
+
+                // for of : it is good to use when need to circulate all the array item and does not need to know the each array element position order
+                for (const item of arr){
+                    console.log(tem) //'a' 'b' 'c' 'd'
+                }
+
+                //for in : it is often use not when need to circulate the array while need to find the key in array
+                for(const index in arr){
+                    console.log(arr[index])
+                }
+
+                const obj = {
+                    color : 'red',
+                    width: 200, 
+                    height: 200,
+                }
+
+                for (const key in obj){
+                    console.log(key) // color width height
+                }
+            </script>
+        </div>
+    </div>
+    <div id="exception">
+         <h1>Exception 예외</h1>
+         <script>
+            function doException(){
+                throw new Error('wow this is Error!');
+                // throw is used to catch the Error 
+                // throw is just as it means it is throwing an error, so if anything does not recieve it then it turn off the program
+                // to recieve this throw error, try and check statement would be the best
+            }
+            
+            function noException(){
+                return true;
+            }
+
+            function callException (type){
+                if(type === 'do'){
+                    doException();
+                } else{
+                    noException();
+                }
+            }
+
+            function main(){
+                try{
+                    callException('do')
+                    // doException()
+                    // noException()
+                }catch(e){
+                    console.log(e)
+                }finally{ // finally statement is used for returning output regardless or the try or catch's error occurance
+                    console.log('done')
+                }
+            }
+            main()
+         </script>
+    </div>
+    <div id="interface">
+        <h1>interface and type aliasing</h1>
+        <strong>type alias</strong>
+        <p>type alias is used when you want to make data type unique not just number or string but want to add meaning to it</p>
+        <div class="ex">
+            <script>
+                export type YesOrNo = string;
+                export type YesOrNo = 'Y' | 'N';
+                export type DayOfWeek = '월' | '화' | '수' | '목' | '금' | '토' | '일';
+                export enum DayOfTheWeek = {'월','화','수','목','금','토','일'};
+                export type FooFunction = () => string; 
+                //type 과 enum의 경우, 문법과 사용에 차이가 있는데, 컴파일 타임에 이 값이 들어가는지의 여부를 확인하고 싶을 때는 type을 사용하지만 
+                // enum의 경우, 런타임에 작동되는 실질적인 데이터이기 때문에 실제로 값이 부여된다. 
+                // type alias가 아닌 type으로 사용하고 싶은 경우, 다음과 같이 사용가능 
+                const dayOfWeek = '월'
+                //만약 월-일까지만으로 제한하고 싶은 경우, 
+                const dayOfWeek : '월' | '화' | '수' | '목' | '금' | '토' | '일' = '월';
+                //위처럼 사용할 경우, 불편하고 매번 월-일까지 작성해줘야되는 번거로움이 존재하므로 다음과 같이 불러올 수 있다. 
+                const dayOfWeek: DayOfWeek = '월'
+
+            </script>
+        </div>
+        <strong>interface</strong>
+        <p></p>
+        <div class="ex">
+            <script>
+                export type Name = string;
+                export type YesOrNo = 'Y' | 'N';
+
+                export interface IUser{
+                    readonly id : number;
+                    readonly name :  Name;
+                    email? : string; // ? = optional
+                    receiveInfo : boolean;
+                    active : YesOrNo;
+                }
+
+                //이렇게 위의 인터페이스와 같은 이름으로 중복으로 작성하는 경우, 인터페이스는 해당 키와 속성을 push 하는 역할을 해 하나로 합쳐준다. 
+                export interface IUser{
+                    address? : string;
+                }
+                
+                //실제 사용 모델 
+                import * as allTypes from './type';
+
+                const iuser : allTypes.IUser = {
+                    id : 1, 
+                    name : 'Will Smith',
+                    email : 'smith@gmail.com',
+                    receiveInfo : false, 
+                    active : 'Y'
+                }
+
+                // 인터페이스 확정 - 타입알리아스와 섞어서 사용 가능
+                export interface IUserProfile extends IUser{
+                    profileImage : string; 
+                    gihub: string;
+                    twitter: string;
+                }
+
+                //만약 하나의 데이터 타입으로만 구성하도록 제약을 걸고 싶은 경우 
+                export interface IOnlyNumberValueObject {
+                    [key:string]: number;
+                }
+                    //사용 예시 
+                    const iStyle: allTypes.IOnlyNumberValueObject = {
+                        borderWidth: 5,
+                        width: 300,
+                        height: 100,
+                    }
+
+
+                // 함수 규격제한 
+                export interface IGetApi {
+                    (url: string, search?: string): Promise<string>;
+                }
+                    //사용예시 - 해당 함수 제한을 적용할 때는 , 함수 정의 문이 아니라 함수 표현식을 써야된다.               
+                    const getApi: allTypes.IGetApi = (url, search = '') => {
+                        return new Promise(resolve => resolve('OK'));
+                    }
+
+                // 번외 
+
+                    //하단의 TUser의 경우, 앞서 작성된 interface와 =의 존재 유무를 제외하고 별다른 차이점이 없다. 
+                    //실제적으로 타입스크립트가 인지하고 작동하는 방식에도 둘의 차이점은 없지만, 문법적인 차이가 조금 존재한다. 
+                    //두개가 지원하는 기능의 약간의 차이가 있는 해당 부분은 원칙을 세워서 사용하면 된다.  
+
+                    //타입알리아스와 인터페이스에 차이점은 인터페이스에 없는 것이 타입알리아스에 있는데, 구체적인 타입을 명시하는 것이다 
+                    //따라서, 데이터는 타입알리아스를 메소드와 같인 구체적인 행위까지 포함된 객체는 인터페이스로 원칙을 세워볼 수 있다. 
+                    //클래스의 경우, 데이터와 메소드가 합쳐진 것이라 인터페이스 ... 
+                    export type TUser = {
+                        readonly id : number;
+                        readonly name :  Name;
+                        email? : string; // ? = optional
+                        receiveInfo : boolean;
+                        active : YesOrNo;
+                    }
+
+                    // 인터페이스의 경우, 같은 인터페이스를 중복해서 작성할 경우, 속성은 유지한 채 하나로 작성하지만, 
+                    // 타입알리아스의 경우, 중복해서 사용할 경우 금지된 동작으로 인식하며 지원하지 않는 기능이다. 
+                    export type TUser = {
+                        address? : string;
+                    }
+
+                    // 타입알라아스의 확장 - 인터섹션과 섞어서 사용가능
+                    export type TUserProfile = IUser & {
+                        profileImage : string; 
+                        gihub: string;
+                        twitter: string; 
+                    }
+
+
+                    //만약 하나의 데이터 타입으로만 구성하도록 제약을 걸고 싶은 경우 
+                    export type IOnlyBooleanValueObject {
+                        [prop:string]: boolean; // prop는 변수명으로 임의로 변경 가능
+                    }
+                        //사용 예시 
+                        const iStyle: allTypes.IOnlyBooleanValueObject = {
+                            border: true,
+                            visible: false,
+                            display: true,
+                        }
+
+                    // 함수 규격제한 
+                    export tyoe TGetApi =  {
+                        (url: string, search?: string): Promise<string>;
+                    }
+            </script>
+        </div>
+    </div>
+    <div id="function">
+        <h1>Function</h1>
+        <div class="ex">
+            <script>
+                //함수의 기본형태 
+                function myFn(x){
+                    return x + 100;
+                    /*
+                    자바스크립트의 경우, 인자가 없을 경우 또는 인자가 지정되어져있는 개수보다 많이 호출될 경우, 
+                    실행이 가능하다. 따라서, 없는 경우와 많이 받은 경우의 수를 고려해야된다. 
+                    위의 함수의 경우 대체적으로 인자가 더 들어오는 경우 무시된다. 이러한 인자를 가변인자라고 칭함.
+                    */
+                }
+                const result = myFn(10);
+
+                //가변인자의 예시 
+                function sum (a, b, c){
+                    return a + b + c;
+
+                    //가변인자를 처리하는 방법은 크게 두 가지가 존재한다. 
+                    // 1. arguments 사용 :  자바스크립트가 호출될 때 함께 전달되는 배열, 유사배열 (배열과 유사하지만 배열은 아닌), 이 배열에는 파라미터가 저장되어져있다. 
+                    // 위의 방식의 단점 : 함수의 외모 즉 시그니처만 확인해서는 함수가 가변인자를 처리하는지 등의 여부를 확인할 수 없고 코드를 열어봐야된다. 
+                    let s = 0; 
+                    for(let i = 0; i < arguments.length; i++){
+                        s = s + arguments[i]
+                    }
+                    return s;
+
+                    //2. rest parameter : 함수 시그니처에 가변인자 처리여부 표시
+                    // function sum (...args){}
+                    // function sum (a,b, ...args){} // 이렇게 사용할 경우, ab (필수값)가 아닌 것들만 argument에 포함되기때문에 더 편리하다
+
+                    let s = 0; 
+                    for(let i = 0; i < args.length; i++){
+                        s = s + args[i]
+                    }
+                    return s;
+
+                }
+                const abcSum = sum(10,20,30,40) 
+
+                //이름이 없는 함수: 익명함수 - 호출할 수 없음 / 자바스크립트는 함수를 값으로 취급 따라서 함수를 변수에 넣을 수 있습
+                // function(){
+                //     return 100;
+                // };
+                const myFnV2 = function(){
+                    return 100;
+                };
+
+                //자바스크립트에는 함수를 호출하는 방법이 크게 세가지가 있다. 
+                myFnV2() //괄호로 호출 
+                sum.call(null, 10, 20, 30) // call 로 호출 : 인자와 동일하게 호출
+                sum.apply(null, [10, 20, 30]) // apply 로 호출 : 배열로 호출
+                //call 과 apply는 context 가 있다는 공통점이 있다. 
+                //둘의 큰 차이점은 함수의 인자값을 외부로 부터 받아서 사용할 때는 apply가 배열로써 더 유연하게 대처할 수 있다는 것이다. 
+                //만약 위의 인자값이 추가된다고 가정했을때, call의 경우 (null, 10,20,30,40) 이렇듯 찾아가서 직접 수정을 해줘야되지만. 
+                //apply의 경우, [10,20,30]을 새로운 상수에 담아서 const arr = [10,20,30] arr를 변경해주므로써 조금 더 유연하게 대처할 수 있다. (null, arr)
+
+                //위의 두 함수 myFn 과 myFnV2 의 차이점은 myFn은 함수 정의문, V2는 식이기때문에 식에는 세미콜론을 필수적으로 붙여줘야된다. 
+
+                //즉시 실행 함수 - 단 한번만 즉시 실행이 필요한 코드를 작성, 이름이 없으므로 두번째 호출이 불가능
+                (function(){
+                    console.log('즉시 살행 함수 실행 !')
+                })() // 호출구문
+
+
+                //화살표 함수 - 화살표함수는 이름이 없는 익명함수가 기본값이다. 따라서 반드시 변수에 넣어서 사용 
+                const sumV2 = (a,b, ...args) => {
+                    let s = 0;
+                    for(let i =0; i < args.length; i++){
+                        s = s + args[i];
+                    }
+
+                    return s;
+                }
+                //화살표 함수는 생략에 자유로운 함수다 
+                const ten = () => { 
+                    return 100
+                }
+                const ten = () => 100; // 코드가 한 줄 일때 중괄호, return생략 가능 
+                const ten = x => x + 100 // 인자가 하나일때 소괄호도 생략 가능
+                
+
+                //generate function 생성기 함수 - 별표가 붙는 것이 특징 
+                // 이 함수의 경우, 최초의 함수를 호출할 경우, 호출되지 않고 실행 준배 상태로만 만든다. 
+                //그리고 객체하는 만들어서 객체 속에 함수가 실행준비를 마쳤으니 그 함수를 실행가능하게 하는 도구를 반환
+                // 이 도구를 이용해서 함수를 실행하고 멈출 수 있음
+                function* gen(){
+                    yield 10;
+                    yield 20;
+                    return 30;
+                    //generate function에서는 return과 유사한 yield를 사용할 수 있다. 
+                }
+                const g = gen();
+
+                g.next() // yield 10으로 들어갔다가 나옴
+                g.next() // yield 20으로 들어갔다가 나옴
+                g.next() // yield 30으로 들어갔다가 나옴
+
+                //반환 값은 없고, 앞서 언급한 것처럼 함수를 실행 가능하게 하는 도구를 반환하고 종료 
+
+
+                // 비동기 함수 
+                async function myTask(){}
+            </script>
+        </div>
+    </div>
+    <div id="propertyandMethod">
+        <h1>property and Method</h1>
+        <div class="ex">
+            <script>
+                //typescript based example
+
+                //동적으로 요소의 삭제를 원치 않을 경우 타입을 만들어준다.
+                // 여기서 삭제할 수 있는 요소는 ? optional 이다.
+                type MyObject = {
+                    readonly name : string;
+                    age?: number;
+                    getFamilyName: () => string;
+                    getLastName: () => string;
+                    getBloodType: () => string;
+                }
+
+                const person2 = {
+                    name : 'Min Tae',
+                    age : 40, 
+                    getFamilyName : function (){
+                        return 'Kim'
+                    },
+                    getLastName: () => 'Kim',
+                    getBloodType(){
+                        return 'B';
+                    }
+                }
+                person2.name;// Min Tae
+                person2.age;//40 
+                //속성을 추가하고 싶은 경우, 추가해주시면 자바스크립트가 동적으로 작동 
+                person2.bloodType;
+                delete person2.bloodType; // 삭제하고싶은경우 delete를 붙여줌
+                //만약 삭제를 원치 않을 경우 타입을 만들어준다.
+                person2.getFamilyName(); //Kim
+                person2.getLastName();//Kim
+                person2.getBloodType();//B
+
+                // bloodType 과 age는 범위가 정해져 있으므로, 코드로 제한을 두는 것이 필요하다.
+
+                //객체를 만드는 또 한가지의 방법 클래스를 사용해보자 
+                class Person {
+                    _bloodType : string;
+                    constructor(bloodType:string){
+                        this._bloodType = bloodType;
+                    }
+                    //아래처럼만 작성하면 메소드 이다. 따라서 p1.bloodType() = 'C'처럼 함수호출이 필요 
+                    //만약 속성처럼 사용하고싶다면 set을 사용
+                    // bloodType(btype:string){
+                    //     this._bloodType = btype;
+                    // }
+
+                    set bloodType(btype:string){
+                        if(btype === 'A' | btype === 'B' | btype === 'O' | btype === 'AB'){
+                            this._bloodType = btype;
+                        }
+                    }
+                    get bloodType(){
+                        return `${this._bloodType} 형`;
+                    }
+
+                }
+                const p1 = new Person('B')
+                p1.bloodType; // B // setter를 사용했을 경우, 해당 코드는 작동하지 않는다. getter를 작성해야 작동.
+                p1.bloodType = 'C'; //이를 방지하기 위해서 클래스 내 타임을 작성
+
+
+                // 자바스크립트로 객체를 만들 수 있는 세번째 방법 create라고 하는 메소드 이용
+                const myObj = Object.create(null,{
+                    name : {
+                        value : 'Kim Min Tae'
+                        writable: true, // true일 경우, 객체 밖에서 속성값 변경 가능 / False일경우, readonly
+                        configurable : false, // 속성을 삭제할 수 없음
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div id="firstClassFunction">
+        <h1>first class function 일급함수</h1>
+        <p>일급함수란 함수코드의 묶음을 일반적인 값처럼 취급해서 변수에 넣을 수 있는 함수.</p>
+        <div class="ex">
+            <script>
+                //인자로 함수가 들어오는 케이스 
+                
+            </script>
+        </div>
+    </div>
+</body>
+</html>
